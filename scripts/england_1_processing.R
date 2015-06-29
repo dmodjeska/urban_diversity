@@ -20,7 +20,7 @@ if (!file.exists(eng_dir)) {
 # Load my mapping from English ONS ethnicities to Canadian visible minorities
 # Combine East Asian and White/Arab groups for summary purposes
 #http://www.statcan.gc.ca/concepts/definitions/minority01-minorite01a-eng.htm
-mapping_file <- paste(eng_dir, "UK_Ethnicity_Mappings.csv", sep = "/")
+mapping_file <- "UK_Ethnicity_Mappings.csv"
 group_mapping <- data.table(read_csv(mapping_file))
 
 #------------------------------------------------------------------------------
