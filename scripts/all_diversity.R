@@ -74,14 +74,15 @@ if (do_plots) {
                 aes(Citywide_Diversity_Index, Tracts_Diversity_Index))
     p <- g + geom_point(size = 2) +
         geom_smooth(method = "loess", se = FALSE) +
-        geom_abline(slope = 1, intercept = 0, linetype = "dotted") +
-        xlim(0, 0.8) + ylim(0, 0.8)
+        geom_abline(slope = 1, intercept = 0, linetype = "dotted")
     p2 <- p + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("City and neighborhood diversity indices \n for 100 largest U.S. cities") +
+        ggtitle("Citywide vs. neighborhood diversity indices\nfor 100 largest U.S. cities") +
         theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
-        theme(axis.title.y = element_text(vjust= 0.75))
+        scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        scale_y_continuous(labels = percent, limits = c(0, 0.8))
     print(p2)
     dev.off()
 
@@ -90,14 +91,15 @@ if (do_plots) {
                 aes(x = Citywide_Diversity_Index, y = Tracts_Diversity_Index,
                     color = Country))
     p <- g + geom_smooth(method = "loess", se = FALSE, size = 1) +
-        geom_abline(slope = 1, intercept = 0, linetype = "dotted") +
-        xlim(0, 0.8) + ylim(0, 0.8)
+        geom_abline(slope = 1, intercept = 0, linetype = "dotted")
     p2 <- p + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("City and neighborhood diversity indices\nfor largest Canadian, English, and American cities") +
+        ggtitle("Citywide vs. neighborhood diversity indices\nfor largest American, Canadian, and English cities") +
         theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
-        theme(axis.title.y = element_text(vjust= 0.75))
+        scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        scale_y_continuous(labels = percent, limits = c(0, 0.8))
     print(p2)
     dev.off()
 }

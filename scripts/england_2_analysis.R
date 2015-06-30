@@ -93,7 +93,7 @@ if (!file.exists(eng_maps_dir)) {
 
 plot_city_descriptions <- function(area_name, mean_index,
                                  bua_tracts_div_index) {
-    plot_title <- sprintf("Tract Diversity Indices for %s", area_name)
+    plot_title <- sprintf("Neighborhood Diversity Indices in %s\n", area_name)
 
     # Visualize city tracts as histogram with probability density
     my_png(eng_histogram_dir, area_name)
@@ -132,7 +132,7 @@ map_tracts_div <- function(bua, bua_div_data) {
     my_png(eng_maps_dir, bua)
 
     # shapefile uses UTM projection - no distortion at city scale
-    plot_title <- sprintf("Tract Diversity map for %s\n", bua)
+    plot_title <- sprintf("Neighborhood Diversity in %s\n", bua)
     m1 <- ggplot(this_ward_map_data) + scale_x_continuous(expand=c(0,0)) +
         scale_y_continuous(expand=c(0,0))
     m2 <- m1 + geom_polygon(aes(x = long, y = lat, group = group,
@@ -155,6 +155,7 @@ map_tracts_div <- function(bua, bua_div_data) {
 
 # Helper function to calculate the citywide diversity index for one city
 calc_city_index <- function(this_bua_data) {
+
     index <- this_bua_data %>%
         # group data by visible minority
         group_by(Group) %>%
@@ -177,6 +178,7 @@ calc_city_index <- function(this_bua_data) {
         #
         # sum each minority's partial diversity index into a city total
         summarize(Diversity_Index = sum(Diversity_Index))
+
     return(index)
 }
 
@@ -240,7 +242,7 @@ group_abbrevs <- data.table(Group = group_names, Group_Letter = groups_to_abbrev
 
 if (do_plots) {
     # from http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
-    ggplotColours <- function(n = 6, h = c(0, 360) + 15) {
+    ggplot_colours <- function(n = 6, h = c(0, 360) + 15) {
         if ((diff(h) %% 360) < 1) h[2] <- h[2] - (360 / n)
         hcl(h = (seq(h[1], h[2], length = n)), c = 100, l = 65)
     }
@@ -254,13 +256,20 @@ if (do_plots) {
 
     # Visualize group populations by city
     my_png(pub_dir, "England_City_Groups")
-    g <- ggplot(eng_anal_data, aes(Group_Letter, Group_Proportion, fill = Group_Letter))
+    g <- ggplot(eng_anal_data, aes(Group_Letter, Group_Proportion,
+                                   fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
-        facet_wrap(~ Area, ncol = 4) + xlab("Group") + ylab("Proportion") +
-        ggtitle("City Group Proportions\n") + theme_bw() +
-        scale_fill_manual(values = ggplotColours(5),
+        facet_wrap(~ Area, ncol = 4) +
+        xlab("Visible Minority") + ylab("Percentage of  Population") +
+        ggtitle("Visible minority percentages in 10 largest English cities\n") + theme_bw() +
+        scale_fill_manual(values = ggplot_colours(5),
                           breaks = group_abbrevs$Group_Letter,
-                          labels = group_abbrevs$Group)
+                          labels = group_abbrevs$Group,
+                          name = "Legend") +
+        theme(axis.title.x = element_text(vjust= -0.25)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        theme(plot.title = element_text(size = 13)) +
+        scale_y_continuous(labels = percent, limits = c(0, 1))
     print(p)
     dev.off()
 
@@ -275,14 +284,15 @@ if (do_plots) {
                       vjust = rep(0.5, length.out = nrow(eng_div_indices))),
                   size = 4)
     p2 <- p + geom_smooth(method = "loess", se = FALSE) +
-        geom_abline(slope = 1, intercept = 0, linetype = "dotted") +
-        xlim(0, 0.6) + ylim(0, 0.6)
+        geom_abline(slope = 1, intercept = 0, linetype = "dotted")
     p3 <- p2 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("City and neighborhood diversity indices \n for 10 largest English cities") +
+        ggtitle("Citywide vs. neighborhood diversity indices\nfor 10 largest English cities") +
         theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
-        theme(axis.title.y = element_text(vjust= 0.75))
+        scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        scale_y_continuous(labels = percent, limits = c(0, 0.8))
     print(p3)
     dev.off()
 }
