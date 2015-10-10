@@ -30,13 +30,13 @@ The results of the American data analysis were obtained from FiveThirtyEight.com
 
 ## R Scripts
 
-The following R scripts are used in this data analysis. They're located in the **scripts** folder
+The following R scripts are used in this data analysis. They're located in the [scripts](scripts) folder
 
-* [**canada_processing.R**](scripts/canada_processing.R):  get and process Canada census data
-* [**canada_analysis.R**](scripts/canada_analysis.R):  analyze Canada processing data, and output graphics and tables
-* [**england_processing.R**](scripts/england_processing.R):  get and process UK census data
-* [**england_analysis.R**](scripts/england_analysis.R):  analyze UK processing data, and output graphics and tables
-* [**summary_presentation.R**](scripts/summary_presentation.R):  output summary graphics for USA, Canada, and UK
+* [canada_processing.R](scripts/canada_processing.R):  get and process Canada census data
+* [canada_analysis.R](scripts/canada_analysis.R):  analyze Canada processing data, and output graphics and tables
+* [england_processing.R](scripts/england_processing.R):  get and process UK census data
+* [england_analysis.R](scripts/england_analysis.R):  analyze UK processing data, and output graphics and tables
+* [summary_presentation.R](scripts/summary_presentation.R):  output summary graphics for USA, Canada, and UK
 
 These scripts assume that the interactive-download data mentioned above is present in the "Canada Data" and "England Data" folders under the working directory. 
 
