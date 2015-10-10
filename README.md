@@ -22,19 +22,27 @@ The UK data used in this analysis were obtained from government census and geogr
   * OA11_BUASD11_BUA11_LAD11_RGN11_EW_LU.csv (interactive download only)
 * http://www.ons.gov.uk/ons/external-links/social-media/g-m/2011-census-merged-ward-boundaries---generalised--20-metres---clipped-to-the-coastline.html (interactive download only via http://www.ons.gov.uk/ons/guide-method/geography/products/census/spatial/2011/index.html)
 
-The results of the American data analysis were obtained from the FiveThirtyEight.com article mentioned above.
+The results of the American data analysis were obtained from FiveThirtyEight.com:
+* http://projects.fivethirtyeight.com/mid-levels/segregation-cities/index.html
 
 ## R Script Files
 
 The following R scripts are used in this data analysis:
-* **canada_processing.R**: get and process Canada census data
-* **canada_analysis.R**: analyze Canada processing data, and output graphics and tables
-* england_processing.R: get and process UK census data
-* england_analysis.R: analyze UK processing data, and output graphics and tables
-* summary_presentation.R: output summary graphics for USA, Canada, and UK
+* **canada_processing.R**:  get and process Canada census data
+* **canada_analysis.R**:  analyze Canada processing data, and output graphics and tables
+* **england_processing.R**:  get and process UK census data
+* **england_analysis.R**:  analyze UK processing data, and output graphics and tables
+* **summary_presentation.R**:  output summary graphics for USA, Canada, and UK
 
-uk_ethnicity_mappings.csv
+These scripts assume that the interactive-download data mentioned above is present in the "Canada Data" and "England Data" folders under the working directory. These scripts also assume that the following file is present in the working directory, in order to map from approximately 100 UK ethnicities into 5 Canadian visible minorities:
+* uk_ethnicity_mappings.csv
 
+The scripts can be run in the order indicated below, for example. The England scripts can also be run before the Canadian ones successfully.
+1. canada_processing.R
+2. canada_analysis.R
+3. england_processing.R
+4. england_processing.R
+5. summary_presentation.R
 
 The script assumes that the experimental data set has already been downloaded 
 and unzipped into the current working directory. The script also assumes that 
