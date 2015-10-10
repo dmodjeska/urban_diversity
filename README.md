@@ -40,7 +40,7 @@ The following R scripts are used in this data analysis. They're located in the *
 
 These scripts assume that the interactive-download data mentioned above is present in the "Canada Data" and "England Data" folders under the working directory. These scripts also assume that the following file is present in the working directory, in order to map from approximately 100 UK ethnicities into 5 Canadian visible minorities:
 
-* **uk_ethnicity_mappings.csv**
+* **england_ethnicity_mappings.csv**
 
 The scripts can be run in the order indicated below, for example. The England scripts can also be run before the Canadian ones successfully.
 
