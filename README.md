@@ -27,7 +27,7 @@ The results of the American data analysis were obtained from FiveThirtyEight.com
 
 ## R Script Files
 
-The following R scripts are used in this data analysis:
+The following R scripts are used in this data analysis. They're located in the **scripts** folder
 * **canada_processing.R**:  get and process Canada census data
 * **canada_analysis.R**:  analyze Canada processing data, and output graphics and tables
 * **england_processing.R**:  get and process UK census data
@@ -35,45 +35,25 @@ The following R scripts are used in this data analysis:
 * **summary_presentation.R**:  output summary graphics for USA, Canada, and UK
 
 These scripts assume that the interactive-download data mentioned above is present in the "Canada Data" and "England Data" folders under the working directory. These scripts also assume that the following file is present in the working directory, in order to map from approximately 100 UK ethnicities into 5 Canadian visible minorities:
-* uk_ethnicity_mappings.csv
+* **uk_ethnicity_mappings.csv**
 
 The scripts can be run in the order indicated below, for example. The England scripts can also be run before the Canadian ones successfully.
-1. canada_processing.R
-2. canada_analysis.R
-3. england_processing.R
-4. england_processing.R
-5. summary_presentation.R
+1 canada_processing.R
+2 canada_analysis.R
+3 england_processing.R
+4 england_processing.R
+5 summary_presentation.R
 
-The script assumes that the experimental data set has already been downloaded 
-and unzipped into the current working directory. The script also assumes that 
-the data set retains its original name of "UCI HAR Dataset" and its original 
-file structure. The data set can be downloaded from here:
-https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
-
-To run the script in an R environment, use the following command:
+To run canada_processing.R in an R environment, for example, use the following command:
 
 ```
-source("run_analysis.R")
-```
-
-The output of the script is a text file that contains the summarized data, per
-the codebook described below. This text file is created in the current working
-directory. This file can be read in a standard text editor or spreadsheet 
-program. This file can also be read in R, using the following commands:
-
-```
-samsung_summary <- read.table("samsung_data_summary.txt", header=TRUE)
-View(samsung_summary)
+source("canada_processing.R")
 ```
 
 ## Output Files
-A codebook for the summary data can be found in the same directory as
-run_analysis.R. This codebook is named codebook.md.
-
-The codebook contains the following information:
-
-* A list of the variables in the summary data, along with a description of each
-variable, its units, and the values that it can hold.
-* A detailed list of the steps taken to tidy and summarize the original data
-set. In particular, steps are outlined to tidy the data, per Hadley Wickham's 
-principles.
+Graphical and textual output from this data analysis can be found in the following folders:
+* **presentation**: summary charts and tables for USA, Canada, and UK
+* **canada_city_maps**: maps for Canadian cities
+* **canada_exploratory_plots: histograms and boxplots for Canadian cities
+* **england_city_maps**: maps or UK cities
+* **england_exploratory_plots: histograms and boxplots for UK cities
