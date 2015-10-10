@@ -1,5 +1,6 @@
-# This analysis extends one by Nate Silver at FiveThirtyEight
-#http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
+# ==============================================================================
+# THIS FILE GETS AND PROCESSES CANADA CENSUS DATA ON VISIBLE MINORITIES
+# ==============================================================================
 
 can_dir <- "Canada Data"
 if (!file.exists(can_dir)) {
@@ -38,9 +39,8 @@ groups <- data.table(Description = minorities, Group = minorities_to_groups)
 # http://www12.statcan.gc.ca/nhs-enm/2011/dp-pd/prof/details/download-telecharger/comprehensive/comp-csv-tab-nhs-enm.cfm?Lang=E
 can_census_zip <- paste(can_dir, "99-004-XWE2011001-401_CSV.ZIP", sep = "/")
 can_census_dir <- paste(can_dir, "99-004-XWE2011001-401_CSV", sep = "/")
-census_file_2 <- paste(can_dir, "98-316-XWE2011001-401.CSV", sep = "/")
 
-if (!file.exists(can_census_dir) | !file.exists(census_file_2)) {
+if (!file.exists(can_census_dir)) {
     stop("Error: The directory with Canadian census data must be in the
              Canada Data directory in the working directory.")
 }
@@ -54,10 +54,8 @@ my_load_data <- function(filename) {
         rename(Tract = Geo_Code, Area_Name = CMA_CA_Name,
                Description = Characteristic, Population = Total) %>%
         mutate(Population = as.numeric(Population)) %>%
-        mutate(CMA = substr(Tract, 1, 3)) %>%
-        mutate(Description = str_trim(Description)) %>%
-        mutate(Description = factor(Description)) %>%
-        mutate(CMA = as.numeric(CMA))
+        mutate(CMA = as.numeric(substr(Tract, 1, 3))) %>%
+        mutate(Description = factor(str_trim(Description)))
 
     return(province_data)
 }

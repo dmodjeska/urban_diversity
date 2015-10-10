@@ -1,5 +1,7 @@
-# This analysis extends one by Nate Silver at FiveThirtyEight
-#http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
+# ==============================================================================
+# THIS FILE ANALYZES CANADA CENSUS DATA ON VISIBLE MINORITIES
+# AND PRESENTS RESULTS
+# ==============================================================================
 
 do_plots <- TRUE
 

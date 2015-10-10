@@ -1,5 +1,6 @@
-# This analysis extends one by Nate Silver at FiveThirtyEight
-#http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
+# ==============================================================================
+# THIS FILE GETS AND PROCESSES UK CENSUS DATA ON ETHNICITIES
+# ==============================================================================
 
 library(dplyr)
 library(stringr)
@@ -20,7 +21,7 @@ if (!file.exists(eng_dir)) {
 # Load my mapping from English ONS ethnicities to Canadian visible minorities
 # Combine East Asian and White/Arab groups for summary purposes
 #http://www.statcan.gc.ca/concepts/definitions/minority01-minorite01a-eng.htm
-mapping_file <- "UK_Ethnicity_Mappings.csv"
+mapping_file <- "england_ethnicity_mappings.csv"
 group_mapping <- data.table(read_csv(mapping_file))
 
 #------------------------------------------------------------------------------
@@ -73,12 +74,10 @@ oa_ward_col_classes <- rep("character", 9)
 oa_bua_col_classes <- rep("character", 11)
 oa_ward_data <- fread(oa_ward_file, sep = ',', na = "", colClasses = oa_ward_col_classes) %>%
     select(OA11CD, WD11CD) %>%
-    rename(Output_Area = OA11CD) %>%
-    rename(Ward = WD11CD)
+    rename(Output_Area = OA11CD, Ward = WD11CD)
 oa_bua_data <- fread(oa_bua_file, sep = ',', na = "", colClasses = oa_bua_col_classes) %>%
     select(OA11CD, BUA11NM) %>%
-    rename(Output_Area = OA11CD) %>%
-    rename(Area = BUA11NM) %>%
+    rename(Output_Area = OA11CD, Area = BUA11NM) %>%
     mutate(Area = sub(" BUA", "", Area)) %>%
     mutate(Area = sub("Greater ", "", Area)) %>%
     filter(!is.na(Area))

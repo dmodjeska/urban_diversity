@@ -1,5 +1,7 @@
-# This analysis extends one by Nate Silver at FiveThirtyEight
-#http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
+# ==============================================================================
+# THIS FILE PRESENTS RESULTS FROM ANALYZING US, CANADA, AND UK CENSUS DATA
+# ON DIVERSITY
+# ==============================================================================
 
 do_plots <- TRUE
 
@@ -23,13 +25,13 @@ can_results_data <- read_csv("Canada_City_Diversity.csv") %>%
     select(-Area_Name)
 eng_results_data <- read_csv("England_City_Diversity.csv") %>%
     mutate(Country = "England") %>%
-    rename(Citywide_Diversity_Index = Areawide_Diversity_Index) %>%
-    rename(Tracts_Diversity_Index = Wards_Diversity_Index) %>%
+    rename(Citywide_Diversity_Index = Areawide_Diversity_Index,
+           Tracts_Diversity_Index = Wards_Diversity_Index) %>%
     select(-Area)
 
 # Get US result data -------------------------------------------------------------
 
-# Note: this data uses municipalities, rather than metropolitan areas
+# Note: USA data uses municipalities, rather than metropolitan areas
 out_file <- "US_Results_Data.txt"
 if (!file.exists(out_file)) {
     library(XML)
@@ -43,8 +45,8 @@ if (!file.exists(out_file)) {
 us_results_data <- read_delim(out_file, ' ') %>%
     mutate(Country = "USA") %>%
     rename(Citywide_Diversity_Index =
-               fancytable.Citywide.Diversity.Index.hide) %>%
-    rename(Tracts_Diversity_Index =
+               fancytable.Citywide.Diversity.Index.hide,
+           Tracts_Diversity_Index =
                fancytable.Neighborhood.Diversity.Index.hide) %>%
     select(-fancytable.Rank, -fancytable.City,
            -fancytable.Citywide.Diversity.Index,

@@ -1,5 +1,7 @@
-# This analysis extends one by Nate Silver at FiveThirtyEight
-#http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
+# ==============================================================================
+# THIS FILE ANALYZES UK CENSUS DATA ON VISIBLE MINORITIES
+# AND PRESENTS RESULTS
+# ==============================================================================
 
 do_plots <- TRUE
 
@@ -120,7 +122,7 @@ plot_city_descriptions <- function(area_name, mean_index,
 }
 
 map_tracts_div <- function(bua, bua_div_data) {
-    # Subset output area (tract) boundaries for this bua
+    # Subset output area (tract) boundaries for this BUA
     # and combine with diversity data
     this_ward_bound <- ward_bound[ward_bound$WD11CD %in% bua_div_data$Ward,]
     this_ward_bound_df <- fortify(this_ward_bound, region = "WD11CD") %>%
