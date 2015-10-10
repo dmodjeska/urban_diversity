@@ -6,7 +6,7 @@ Given the smaller sizes of Canada and the UK relative to the USA, the 10 most po
 For more information about the original analysis by FiveThirtyEight.com, please see this article:
 http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
 
-## Source Data
+## Raw Data
 
 The Canadian data used in this analysis were obtained from government census and geographic repositories:
 * http://www12.statcan.gc.ca/nhs-enm/2011/dp-pd/prof/details/download-telecharger/comprehensive/comp-csv-tab-nhs-enm.cfm?Lang=E
@@ -25,7 +25,7 @@ The UK data used in this analysis were obtained from government census and geogr
 The results of the American data analysis were obtained from FiveThirtyEight.com:
 * http://projects.fivethirtyeight.com/mid-levels/segregation-cities/index.html
 
-## R Script Files
+## R Scripts
 
 The following R scripts are used in this data analysis. They're located in the **scripts** folder
 * **canada_processing.R**:  get and process Canada census data
@@ -50,10 +50,12 @@ To run canada_processing.R in an R environment, for example, use the following c
 source("canada_processing.R")
 ```
 
-## Output Files
+## Presentation Files
 Graphical and textual output from this data analysis can be found in the following folders:
 * **presentation**: summary charts and tables for USA, Canada, and UK
 * **canada_city_maps**: maps for Canadian cities
-* **canada_exploratory_plots: histograms and boxplots for Canadian cities
+* **canada_exploratory_plots**: histograms and boxplots for Canadian cities
 * **england_city_maps**: maps or UK cities
-* **england_exploratory_plots: histograms and boxplots for UK cities
+* **england_exploratory_plots**: histograms and boxplots for UK cities
+
+
