@@ -8,8 +8,34 @@ http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-s
 
 ## Source Data
 
+The Canadian data used in this analysis were obtained from government census and geographic repositories:
+* http://www12.statcan.gc.ca/nhs-enm/2011/dp-pd/prof/details/download-telecharger/comprehensive/comp-csv-tab-nhs-enm.cfm?Lang=E
+  * 99-004-XWE2011001-401_CSV.ZIP (interactive download only)
+* http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/gct_000b11a_e.zip
+* http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/gcsd000b11a_e.zip
 
-## Running the Scripts
+The UK data used in this analysis were obtained from government census and geographic repositories:
+* http://www.ons.gov.uk/ons/rel/census/2011-census/key-statistics-and-quick-statistics-for-wards-and-output-areas-in-england-and-wales/rft-ct0010-wards.zip
+* www.ons.gov.uk/ons/external-links/social-media/g-m/2011-built-up-areas-to-2011-lads.html
+  * OA11_WD11_LAD11_EW_LU.csv (interactive download only)
+* http://www.ons.gov.uk/ons/external-links/social-media/g-m/2011-oas-to-2011-wards--with-best-fit-percentage-indicator-.html
+  * OA11_BUASD11_BUA11_LAD11_RGN11_EW_LU.csv (interactive download only)
+* http://www.ons.gov.uk/ons/external-links/social-media/g-m/2011-census-merged-ward-boundaries---generalised--20-metres---clipped-to-the-coastline.html (interactive download only via http://www.ons.gov.uk/ons/guide-method/geography/products/census/spatial/2011/index.html)
+
+The results of the American data analysis were obtained from the FiveThirtyEight.com article mentioned above.
+
+## R Script Files
+
+The following R scripts are used in this data analysis:
+* **canada_processing.R**: get and process Canada census data
+* **canada_analysis.R**: analyze Canada processing data, and output graphics and tables
+* england_processing.R: get and process UK census data
+* england_analysis.R: analyze UK processing data, and output graphics and tables
+* summary_presentation.R: output summary graphics for USA, Canada, and UK
+
+uk_ethnicity_mappings.csv
+
+
 The script assumes that the experimental data set has already been downloaded 
 and unzipped into the current working directory. The script also assumes that 
 the data set retains its original name of "UCI HAR Dataset" and its original 
