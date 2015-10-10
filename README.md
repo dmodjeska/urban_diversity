@@ -32,7 +32,7 @@ The results of the American data analysis were obtained from FiveThirtyEight.com
 
 The following R scripts are used in this data analysis. They're located in the **scripts** folder
 
-* **canada_processing.R**:  get and process Canada census data
+* [**canada_processing.R**](scripts/canada_processing.R):  get and process Canada census data
 * **canada_analysis.R**:  analyze Canada processing data, and output graphics and tables
 * **england_processing.R**:  get and process UK census data
 * **england_analysis.R**:  analyze UK processing data, and output graphics and tables
