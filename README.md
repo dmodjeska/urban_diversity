@@ -1,9 +1,9 @@
 ## Background
-The data analysis performed by the scripts below replicates a study by Nata Silver of FiveThirtyEight.com on the subject of urban diversity and segregation. The original study explored ethnic diversity at citywide vs. neighborhood levels in the 100 most populous American cities. Building on this work, the current analysis explores diversity for the largest Canadian and UK cities. 
+The data analysis performed by the scripts below replicates a study by Nata Silver of [FiveThirtyEight.com](http://fivethirtyeight.com) on the subject of urban diversity and segregation. The original study explored ethnic diversity at citywide vs. neighborhood levels in the 100 most populous American cities. Building on this work, the current analysis explores diversity for the largest Canadian and UK cities. 
 
 Given the smaller sizes of Canada and the UK relative to the USA, the 10 most populous cities were chosen in each country for analysis. This threshold resulted in the smallest cities analyzed having approximately the same population as the smallest cities analyzed in the American study, on the order of 500,000 people. Also, it's worth noting that comprehensive statistics on ethnicity in the UK are available only for the nations of England and Wales, so these nations were the focus of the present study.
 
-For more information about the original analysis by FiveThirtyEight.com, please see this article:
+For more information about the original analysis by [FiveThirtyEight.com](http://fivethirtyeight.com), please see this article:
 http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
 
 ## Raw Data
@@ -38,11 +38,11 @@ These scripts assume that the interactive-download data mentioned above is prese
 * **uk_ethnicity_mappings.csv**
 
 The scripts can be run in the order indicated below, for example. The England scripts can also be run before the Canadian ones successfully.
-1 canada_processing.R
-2 canada_analysis.R
-3 england_processing.R
-4 england_processing.R
-5 summary_presentation.R
+1. canada_processing.R
+2. canada_analysis.R
+3. england_processing.R
+4. england_processing.R
+5. summary_presentation.R
 
 To run canada_processing.R in an R environment, for example, use the following command:
 
