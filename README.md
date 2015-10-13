@@ -63,8 +63,8 @@ Graphical and textual output from this data analysis can be found in the followi
 
 * [**presentation**](presentation): summary charts and tables for USA, Canada, and UK
 * [**canada_city_maps**](canada_city_maps): maps for Canadian cities
-* [**canada_exploratory_plots**](canada_exploratory_plots): histograms and boxplots for Canadian cities
+* [**canada_exploratory_plots**](canada_exploratory_plots): exploratory plots for Canadian cities
 * [**england_city_maps**](england_city_maps): maps or UK cities
-* [**england_exploratory_plots**](england_exploratory_plots): histograms and boxplots for UK cities
+* [**england_exploratory_plots**](england_exploratory_plots): exploratory plots for UK cities
 
 
