@@ -70,6 +70,7 @@ my_png <- function(prefix) {
 
 if (do_plots) {
     library(ggplot2)
+    library(scales)
 
     my_png("USA_City_Diversity")
     g <- ggplot(us_results_data,
