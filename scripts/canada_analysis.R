@@ -116,7 +116,7 @@ plot_city_descriptions <- function(cma, mean_index,
         xlab("Diversity Index") + ylab("Density") + ggtitle(plot_title) +
         geom_vline(xintercept = mean_index, color = "red",
                    linetype = "dotted", size = 1) +
-        theme_bw()
+        theme_grey()
     print(p)
     dev.off()
 
@@ -124,9 +124,9 @@ plot_city_descriptions <- function(cma, mean_index,
     my_png(can_boxplot_dir, cma$Area_Name)
     g <- ggplot(cma_tracts_div_indices,
                 aes(x = factor(0), y = Diversity_Index))
-    p <- g + geom_boxplot(fill = "gray80") + xlab("") +
+    p <- g + geom_boxplot() + xlab("") +
         ylab("Diversity Index") +
-        ggtitle(plot_title) + theme_bw()
+        ggtitle(plot_title) + theme_grey()
     print(p)
     dev.off()
 }
@@ -147,9 +147,15 @@ map_tracts_div <- function(cma, city_div_data) {
                                           subdiv_bound$CMAUID == cma$CMA,]
     city_subdiv_boundDf <- fortify(city_subdiv_bound, region = "CSDUID")
 
+    # get geographical coordinates to position annotation
+    min_long <- min(city_map_data$long)
+    max_long <- max(city_map_data$long)
+    min_lat <- min(city_map_data$lat)
+    max_lat <- max(city_map_data$lat)
+
     # Make plot
     my_png(can_maps_dir, cma$Area_Name)
-    plot_title <- sprintf("Tract Diversity map for %s", cma$Area_Name)
+    plot_title <- sprintf("Neighborhood Diversity in %s", cma$Area_Name)
     m1 <- ggplot(city_map_data)
     m2 <- m1 + geom_polygon(aes(x = long, y = lat, group = group,
                                 fill = Diversity_Index),
@@ -163,7 +169,13 @@ map_tracts_div <- function(cma, city_div_data) {
                          city_subdiv_boundDf, color = "gray", size = 0.5)
     m4 <- m3  + theme_nothing(legend = TRUE) +
         labs(title = plot_title, fill = "") +
-        guides(fill = guide_legend(reverse = TRUE))
+        guides(fill = guide_legend(reverse = TRUE)) +
+        theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
+        theme(panel.background = element_rect(colour = "gray90")) +
+        annotate(geom = "text", x = max_long - 0.2, y = min_lat + 0.001,
+                 label = "Data from Statistics Canada",
+                 color = "gray60", size = 3.5)
+
     print(m4)
 
     dev.off()
@@ -290,13 +302,39 @@ if (do_plots) {
         mutate(Group_Proportion = Population/Cma_Population)
 
     # Visualize group populations by city
-    my_png(pub_dir, "Canada_City_Groups")
+    my_png(can_plots_dir, "Canada_City_Groups")
     g <- ggplot(can_data_plot, aes(Group_Letter, Group_Proportion,
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
         facet_wrap(~ Area_Name, ncol = 4) +
         xlab("Visible Minority") + ylab("Percentage of Population") +
-        ggtitle("Visible minority percentages in 10 largest Canadian cities\n") + theme_bw() +
+        ggtitle("Visible minority percentages in 10 most populous Canadian cities\n") + theme_grey() +
+        annotate(geom = "text", x = 2, y = 0.04,
+                 label = "Data from Statistics Canada",
+                 color = "gray60", size = 3.5) +
+        scale_fill_manual(values = ggplot_colors(5),
+                          breaks = group_abbrevs$Group_Letter,
+                          labels = group_abbrevs$Group,
+                          name = "Legend") +
+        theme(axis.title.x = element_text(vjust= -0.25)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        theme(plot.title = element_text(size = 13)) +
+        scale_y_continuous(labels = percent, limits = c(0, 1))
+    print(p)
+    dev.off()
+
+    # Visualize group populations in Toronto
+    my_png(pub_dir, "Toronto_City_Groups")
+    toronto_data_plot <- can_data_plot %>%
+        filter(Area_Name == "Toronto")
+    g <- ggplot(toronto_data_plot, aes(Group_Letter, Group_Proportion,
+                                   fill = Group_Letter))
+    p <- g + geom_bar(stat = "identity") +
+        xlab("Visible Minority") + ylab("Percentage of Population") +
+        ggtitle("Visible minority percentages in Toronto\n") + theme_grey() +
+        annotate(geom = "text", x = 1.75, y = 0.85,
+                 label = "Data from Statistics Canada",
+                 color = "gray60", size = 3.5) +
         scale_fill_manual(values = ggplot_colors(5),
                           breaks = group_abbrevs$Group_Letter,
                           labels = group_abbrevs$Group,
@@ -312,21 +350,23 @@ if (do_plots) {
     my_png(pub_dir, "Canada_City_Diversity")
     g <- ggplot(can_div_indices,
                 aes(Citywide_Diversity_Index, Tracts_Diversity_Index))
-    p <- g + geom_point(size = 2) +
-        geom_text(aes(label = Area_Name), size = 4,
-                  hjust = rep(c(1.25,-0.25),
-                              length.out = nrow(can_div_indices)),
-                  vjust = rep(0.5, length.out = nrow(can_div_indices)))
-    p2 <- p +  geom_smooth(method = "loess", se = FALSE) +
+    p1 <- g +  geom_smooth(method = "loess", se = FALSE, size = 1, color = "red") +
         geom_abline(slope = 1, intercept = 0, linetype = "dotted")
+    p2 <- p1 + geom_point(size = 3) +
+        geom_text(aes(label = Area_Name), size = 4,
+                  hjust = c(-0.25, -0.25, 1.25, -0.25, 1.25, -0.25, 1.25, -0.25, 1.25, 1.25),
+                  vjust = c(0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5))
     p3 <- p2 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("Citywide vs. neighborhood diversity indices\nfor 10 largest Canadian cities") +
-        theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
+        ggtitle("Citywide vs. neighborhood diversity\nin 10 most populous Canadian cities") +
+        annotate(geom = "text", x = 0.58, y = 0.04,
+                 label = "Data from Statistics Canada",
+                 color = "gray60", size = 3.5) +
+        theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
-        scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
+        scale_x_continuous(labels = percent, limits = c(0, 0.7)) +
         theme(axis.title.y = element_text(vjust= 0.75)) +
-        scale_y_continuous(labels = percent, limits = c(0, 0.8))
+        scale_y_continuous(labels = percent, limits = c(0, 0.7))
     print(p3)
     dev.off()
 }

@@ -18,7 +18,7 @@ if (!file.exists(eng_dir)) {
 # MAP FROM ONS ETHNICITIES TO 5-CLASS VISIBLE MINORITIES
 #------------------------------------------------------------------------------
 
-# Load my mapping from English ONS ethnicities to Canadian visible minorities
+# Load my mapping from British ONS ethnicities to Canadian visible minorities
 # Combine East Asian and White/Arab groups for summary purposes
 #http://www.statcan.gc.ca/concepts/definitions/minority01-minorite01a-eng.htm
 mapping_file <- "england_ethnicity_mappings.csv"
@@ -80,6 +80,7 @@ oa_bua_data <- fread(oa_bua_file, sep = ',', na = "", colClasses = oa_bua_col_cl
     rename(Output_Area = OA11CD, Area = BUA11NM) %>%
     mutate(Area = sub(" BUA", "", Area)) %>%
     mutate(Area = sub("Greater ", "", Area)) %>%
+    mutate(Area = sub("South", "S.", Area)) %>%
     filter(!is.na(Area))
 bua_data <- inner_join(oa_ward_data, oa_bua_data, by = "Output_Area") %>%
     select(-Output_Area) %>%

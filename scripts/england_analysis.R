@@ -33,7 +33,7 @@ if (!file.exists("england_processing.csv")) {
 eng_anal_data <- read_csv("england_processing.csv")
 
 #------------------------------------------------------------------------------
-# GET AND LOAD BOUNDARY FILES FOR ENGLISH CITIES (BUA's)
+# GET AND LOAD BOUNDARY FILES FOR BRITISH cities (BUA's)
 #------------------------------------------------------------------------------
 
 # This data file is only available via manual download from the following URL:
@@ -61,7 +61,7 @@ if (!file.exists(ward_dir)) {
 ward_bound <- readShapePoly(ward_bound_file)
 
 #------------------------------------------------------------------------------
-# VISUALIZE DIVERSITY IN EACH ENGLISH CITY (BUA)
+# VISUALIZE DIVERSITY IN EACH BRITISH CITY (BUA)
 #------------------------------------------------------------------------------
 
 library(ggplot2)
@@ -106,7 +106,7 @@ plot_city_descriptions <- function(area_name, mean_index,
         xlab("Diversity Index") + ylab("Density") + ggtitle(plot_title) +
         geom_vline(xintercept = mean_index, color = "red",
                    linetype = "dotted", size = 1) +
-        theme_bw()
+        theme_grey()
     print(p)
     dev.off()
 
@@ -114,9 +114,9 @@ plot_city_descriptions <- function(area_name, mean_index,
     my_png(eng_boxplot_dir, area_name)
     g <- ggplot(bua_tracts_div_index,
                 aes(x = factor(0), y = Diversity_Index))
-    p <- g + geom_boxplot(fill = "gray80") + xlab("") +
+    p <- g + geom_boxplot() + xlab("") +
         ylab("Diversity Index") +
-        ggtitle(plot_title) + theme_bw()
+        ggtitle(plot_title) + theme_grey()
     print(p)
     dev.off()
 }
@@ -133,6 +133,12 @@ map_tracts_div <- function(bua, bua_div_data) {
     # Make plot (add margins around map itself)
     my_png(eng_maps_dir, bua)
 
+    # get geographical coordinates to position annotation
+    min_long <- min(this_ward_map_data$long)
+    max_long <- max(this_ward_map_data$long)
+    min_lat <- min(this_ward_map_data$lat)
+    max_lat <- max(this_ward_map_data$lat)
+
     # shapefile uses UTM projection - no distortion at city scale
     plot_title <- sprintf("Neighborhood Diversity in %s\n", bua)
     m1 <- ggplot(this_ward_map_data) + scale_x_continuous(expand=c(0,0)) +
@@ -145,7 +151,11 @@ map_tracts_div <- function(bua, bua_div_data) {
     m3 <- m2 + theme_nothing(legend = TRUE) +
         labs(title = plot_title, fill = "") +
         guides(fill = guide_legend(reverse = TRUE)) +
-        theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+        theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
+        theme(panel.background = element_rect(colour = "gray90")) +
+        annotate(geom = "text", x = max_long - 25000, y = min_lat + 2000,
+                 label = "Data from UK's Office for National Statistics",
+                 color = "gray60", size = 3.5)
     print(m3)
 
     dev.off()
@@ -233,7 +243,7 @@ eng_div_indices <- lapply(area_names, my_calc_indices) %>%
     arrange(Areawide_Diversity_Index)
 
 #------------------------------------------------------------------------------
-# VISUALIZE ENGLISH CITIES (AS BUA'S)
+# VISUALIZE BRITISH cities (AS BUA'S)
 #------------------------------------------------------------------------------
 
 # Create lookup table for groups and one-letter abbreviations
@@ -257,13 +267,36 @@ if (do_plots) {
         mutate(Group_Proportion = Population/Bua_Population)
 
     # Visualize group populations by city
-    my_png(pub_dir, "England_City_Groups")
+    my_png(eng_plots_dir, "England_City_Groups")
     g <- ggplot(eng_anal_data, aes(Group_Letter, Group_Proportion,
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
         facet_wrap(~ Area, ncol = 4) +
         xlab("Visible Minority") + ylab("Percentage of  Population") +
-        ggtitle("Visible minority percentages in 10 largest English cities\n") + theme_bw() +
+        ggtitle("Visible minority percentages in 10 most populous British cities\n") + theme_grey() +
+        scale_fill_manual(values = ggplot_colours(5),
+                          breaks = group_abbrevs$Group_Letter,
+                          labels = group_abbrevs$Group,
+                          name = "Legend") +
+        theme(axis.title.x = element_text(vjust= -0.25)) +
+        theme(axis.title.y = element_text(vjust= 0.75)) +
+        theme(plot.title = element_text(size = 13)) +
+        scale_y_continuous(labels = percent, limits = c(0, 1))
+    print(p)
+    dev.off()
+
+    # Visualize group populations in London
+    my_png(pub_dir, "London_City_Groups")
+    london_anal_data <- eng_anal_data %>%
+        filter(Area == "London")
+    g <- ggplot(london_anal_data, aes(Group_Letter, Group_Proportion,
+                                   fill = Group_Letter))
+    p <- g + geom_bar(stat = "identity") +
+        xlab("Visible Minority") + ylab("Percentage of  Population") +
+        ggtitle("Visible minority percentages in London\n") + theme_grey() +
+        annotate(geom = "text", x = 2.5, y = 0.87,
+                 label = "Data from UK's Office for National Statistics",
+                 color = "gray60", size = 3.5) +
         scale_fill_manual(values = ggplot_colours(5),
                           breaks = group_abbrevs$Group_Letter,
                           labels = group_abbrevs$Group,
@@ -279,22 +312,25 @@ if (do_plots) {
     my_png(pub_dir, "England_City_Diversity")
     g <- ggplot(eng_div_indices,
                 aes(Areawide_Diversity_Index, Wards_Diversity_Index))
-    p <- g + geom_point(size = 2) +
+    p1 <- g + geom_smooth(method = "loess", se = FALSE, size = 1, color = "red") +
+        geom_abline(slope = 1, intercept = 0, linetype = "dotted")
+    p2 <- p1 + geom_point(size = 3) +
         geom_text(aes(label = Area,
-                      hjust = rep(c(1.25,-0.25),
+                      hjust = rep(c(1.25, -0.25),
                                   length.out = nrow(eng_div_indices)),
                       vjust = rep(0.5, length.out = nrow(eng_div_indices))),
                   size = 4)
-    p2 <- p + geom_smooth(method = "loess", se = FALSE) +
-        geom_abline(slope = 1, intercept = 0, linetype = "dotted")
     p3 <- p2 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("Citywide vs. neighborhood diversity indices\nfor 10 largest English cities") +
-        theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
+        ggtitle("Citywide vs. neighborhood diversity\nin 10 most populous British cities") +
+        annotate(geom = "text", x = 0.54, y = 0.04,
+                 label = "Data from UK's Office for National Statistics",
+                 color = "gray60", size = 3.5) +
+        theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
-        scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
+        scale_x_continuous(labels = percent, limits = c(0, 0.7)) +
         theme(axis.title.y = element_text(vjust= 0.75)) +
-        scale_y_continuous(labels = percent, limits = c(0, 0.8))
+        scale_y_continuous(labels = percent, limits = c(0, 0.7))
     print(p3)
     dev.off()
 }
@@ -303,12 +339,12 @@ if (do_plots) {
 # SAVE DATA SUMMARIES
 #------------------------------------------------------------------------------
 
-# Save English city diversity indices as a data file and as an HTML file
+# Save British city diversity indices as a data file and as an HTML file
 
 out_file <- paste(".", "England_City_Diversity.csv", sep = "/")
 write.csv(eng_div_indices, out_file, row.names = FALSE)
 
 library(xtable)
-table <- xtable(eng_div_indices, caption = "English City Diversity Indices")
+table <- xtable(eng_div_indices, caption = "British City Diversity Indices")
 out_file <- paste(pub_dir, "England_City_Diversity.html", sep = "/")
 print.xtable(table, type = "html", file = out_file)
