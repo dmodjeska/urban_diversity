@@ -153,8 +153,8 @@ map_tracts_div <- function(bua, bua_div_data) {
         guides(fill = guide_legend(reverse = TRUE)) +
         theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
         theme(panel.background = element_rect(colour = "gray90")) +
-        annotate(geom = "text", x = max_long - 25000, y = min_lat + 2000,
-                 label = "Data from UK's Office for National Statistics",
+        annotate(geom = "text", x = max_long - 28000, y = min_lat + 2000,
+                 label = "Based on data from UK's Office for National Statistics",
                  color = "gray60", size = 3.5)
     print(m3)
 
@@ -293,9 +293,10 @@ if (do_plots) {
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
         xlab("Visible Minority") + ylab("Percentage of  Population") +
-        ggtitle("Visible minority percentages in London\n") + theme_grey() +
-        annotate(geom = "text", x = 2.5, y = 0.87,
-                 label = "Data from UK's Office for National Statistics",
+        ggtitle("Visible minority percentages in London\n") +
+        theme_grey(base_size = 14) +
+        annotate(geom = "text", x = 2.6, y = 0.85,
+                 label = "Based on data from UK's Office for National Statistics",
                  color = "gray60", size = 3.5) +
         scale_fill_manual(values = ggplot_colours(5),
                           breaks = group_abbrevs$Group_Letter,
@@ -323,8 +324,8 @@ if (do_plots) {
     p3 <- p2 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
         ggtitle("Citywide vs. neighborhood diversity\nin 10 most populous British cities") +
-        annotate(geom = "text", x = 0.54, y = 0.04,
-                 label = "Data from UK's Office for National Statistics",
+        annotate(geom = "text", x = 0.48, y = 0.025,
+                 label = "Based on data from UK's Office for National Statistics",
                  color = "gray60", size = 3.5) +
         theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +

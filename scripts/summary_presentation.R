@@ -81,10 +81,10 @@ if (do_plots) {
     p2 <- p + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
         ggtitle("Citywide vs. neighborhood diversity\nin 100 largest U.S. cities") +
-        annotate(geom = "text", x = 0.67, y = 0.03,
-                 label = "Data from FiveThirtyEight",
+        annotate(geom = "text", x = 0.63, y = 0.03,
+                 label = "Based on data from FiveThirtyEight",
                  color = "gray60", size = 3.5) +
-        theme_bw() + theme(plot.title = element_text(size = 12, vjust = 1)) +
+        theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
         scale_x_continuous(labels = percent, limits = c(0, 0.8)) +
         theme(axis.title.y = element_text(vjust= 0.75)) +
@@ -102,8 +102,8 @@ if (do_plots) {
     p2 <- p1 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
         ggtitle("Citywide vs. neighborhood diversity\nin largest American, Canadian, and English cities") +
-        annotate(geom = "text", x = 0.65, y = 0.05,
-                 label = "Data from FiveThirtyEight,\nStatistics Canada,\nand UK's ONS",
+        annotate(geom = "text", x = 0.62, y = 0.05,
+                 label = "Based on data from FiveThirtyEight,\nStatistics Canada, and UK's ONS",
                  color = "gray60", size = 3) +
         theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +

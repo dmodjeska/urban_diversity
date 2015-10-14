@@ -83,6 +83,7 @@ subdiv_bound <- readShapePoly(subdiv_bound_file)
 
 library(ggplot2)
 library(scales)
+library(grid)
 bar_color <- "gray10"
 
 # install.packages("gpclib")
@@ -172,8 +173,8 @@ map_tracts_div <- function(cma, city_div_data) {
         guides(fill = guide_legend(reverse = TRUE)) +
         theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) +
         theme(panel.background = element_rect(colour = "gray90")) +
-        annotate(geom = "text", x = max_long - 0.2, y = min_lat + 0.001,
-                 label = "Data from Statistics Canada",
+        annotate(geom = "text", x = max_long - 0.3, y = min_lat,
+                 label = "Based on data from Statistics Canada",
                  color = "gray60", size = 3.5)
 
     print(m4)
@@ -310,7 +311,7 @@ if (do_plots) {
         xlab("Visible Minority") + ylab("Percentage of Population") +
         ggtitle("Visible minority percentages in 10 most populous Canadian cities\n") + theme_grey() +
         annotate(geom = "text", x = 2, y = 0.04,
-                 label = "Data from Statistics Canada",
+                 label = "Based on data from Statistics Canada",
                  color = "gray60", size = 3.5) +
         scale_fill_manual(values = ggplot_colors(5),
                           breaks = group_abbrevs$Group_Letter,
@@ -331,9 +332,10 @@ if (do_plots) {
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
         xlab("Visible Minority") + ylab("Percentage of Population") +
-        ggtitle("Visible minority percentages in Toronto\n") + theme_grey() +
-        annotate(geom = "text", x = 1.75, y = 0.85,
-                 label = "Data from Statistics Canada",
+        ggtitle("Visible minority percentages in Toronto\n") +
+        theme_grey(base_size = 14) +
+        annotate(geom = "text", x = 2.00, y = 0.85,
+                 label = "Based on data from Statistics Canada",
                  color = "gray60", size = 3.5) +
         scale_fill_manual(values = ggplot_colors(5),
                           breaks = group_abbrevs$Group_Letter,
@@ -359,8 +361,8 @@ if (do_plots) {
     p3 <- p2 + xlab("Citywide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
         ggtitle("Citywide vs. neighborhood diversity\nin 10 most populous Canadian cities") +
-        annotate(geom = "text", x = 0.58, y = 0.04,
-                 label = "Data from Statistics Canada",
+        annotate(geom = "text", x = 0.54, y = 0.025,
+                 label = "Based on data from Statistics Canada",
                  color = "gray60", size = 3.5) +
         theme_grey() + theme(plot.title = element_text(size = 12, vjust = 1)) +
         theme(axis.title.x = element_text(vjust= -0.25)) +
