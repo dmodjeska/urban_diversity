@@ -28,6 +28,8 @@ The results of the American data analysis were obtained from FiveThirtyEight.com
 
 * http://projects.fivethirtyeight.com/mid-levels/segregation-cities/index.html
 
+All data were downloaded in May 2015.
+
 ## R Scripts
 
 The following R scripts are used in this data analysis. They're located in the [**scripts**](scripts) folder
