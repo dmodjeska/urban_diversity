@@ -256,9 +256,11 @@ my_calc_indices <- function(cma) {
         slice(1) %>%
         select(Area_Name)
 
+    City_Population = sum(clean_city_data$Population)
     city_indices <- data.table(CMA = cma, Area_Name = as.character(cma_name),
                                Citywide_Diversity_Index = citywide_div_index[[1]],
-                               Tracts_Diversity_Index = cma_tracts_div_index)
+                               Tracts_Diversity_Index = cma_tracts_div_index,
+                               City_Population = City_Population)
 
     return(city_indices)
 }

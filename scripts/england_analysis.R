@@ -229,9 +229,11 @@ my_calc_indices <- function(area) {
     # Calculate indices
     buawide_div_Index <- calc_city_index(cleanBuaData)
     bua_wards_div_Index <- calcWardsIndex(area, cleanBuaData)
+    City_Population = sum(cleanBuaData$Population)
     cityIndices <- data.table(Area = area,
                               Areawide_Diversity_Index = buawide_div_Index[[1]],
-                              Wards_Diversity_Index = bua_wards_div_Index)
+                              Wards_Diversity_Index = bua_wards_div_Index,
+                              City_Population = City_Population)
     return(cityIndices)
 }
 
@@ -239,7 +241,8 @@ my_calc_indices <- function(area) {
 area_names = unique(eng_anal_data$Area)
 eng_div_indices <- lapply(area_names, my_calc_indices) %>%
     bind_rows() %>%
-    select(Area, Areawide_Diversity_Index, Wards_Diversity_Index) %>%
+    select(Area, Areawide_Diversity_Index, Wards_Diversity_Index,
+           City_Population) %>%
     arrange(Areawide_Diversity_Index)
 
 #------------------------------------------------------------------------------
