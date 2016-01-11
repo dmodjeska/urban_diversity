@@ -38,7 +38,7 @@ The following R scripts are used in this data analysis. They're located in the [
 * [**canada_analysis.R**](scripts/canada_analysis.R):  analyze Canada processing data, and output graphics and tables
 * [**england_processing.R**](scripts/england_processing.R):  get and process UK census data
 * [**england_analysis.R**](scripts/england_analysis.R):  analyze UK processing data, and output graphics and tables
-* [**summary_presentation.R**](scripts/summary_presentation.R):  output summary graphics for USA, Canada, and UK
+* [**summary_presentation.R**](scripts/summary_presentation.R):  output summary graphics for USA, Canada, and UK (and create a simple linear regression model)
 
 These scripts assume that the interactive-download data mentioned above is present in the "Canada Data" and "England Data" folders under the working directory. 
 
