@@ -6,6 +6,9 @@ Given the smaller sizes of Canada and the UK relative to the USA, the 10 most po
 For more information about the original analysis by [FiveThirtyEight.com](http://fivethirtyeight.com), please see this article:
 * http://fivethirtyeight.com/features/the-most-diverse-cities-are-often-the-most-segregated/
 
+For a writeup of the new analysis, please see this blog post:
+* http://modjeska.typepad.com/icosahedron/2015/10/city-diversity-vs-segregation-in-the-usa-canada-and-the-uk.html
+
 ## Raw Data
 
 The Canadian data used in this analysis were obtained from government census and geographic repositories:
