@@ -33,7 +33,7 @@ if (!file.exists("england_processing.csv")) {
 eng_anal_data <- read_csv("england_processing.csv")
 
 #------------------------------------------------------------------------------
-# GET AND LOAD BOUNDARY FILES FOR BRITISH cities (BUA's)
+# GET AND LOAD BOUNDARY FILES FOR BRITISH METROS (BUA's)
 #------------------------------------------------------------------------------
 
 # This data file is only available via manual download from the following URL:
@@ -88,17 +88,18 @@ if (!file.exists(eng_boxplot_dir)) {
     dir.create(eng_boxplot_dir)
 }
 
-eng_maps_dir <- "england_city_maps"
+eng_maps_dir <- "england_metro_maps"
 if (!file.exists(eng_maps_dir)) {
     dir.create(eng_maps_dir)
 }
 
-plot_city_descriptions <- function(area_name, mean_index,
-                                 bua_tracts_div_index) {
-    plot_title <- sprintf("Neighborhood Diversity Indices in %s\n", area_name)
 
-    # Visualize city tracts as histogram with probability density
-    my_png(eng_histogram_dir, area_name)
+plot_metro_descriptions <- function(metro_name, mean_index,
+                                 bua_tracts_div_index) {
+    plot_title <- sprintf("Neighborhood Diversity Indices in %s\n", metro_name)
+
+    # Visualize metro tracts as histogram with probability density
+    my_png(eng_histogram_dir, metro_name)
     g <- ggplot(bua_tracts_div_index, aes(Diversity_Index))
     p <- g + geom_histogram(aes(y = ..density..), binwidth = 0.035,
                             colour = "white", fill = bar_color) +
@@ -110,8 +111,8 @@ plot_city_descriptions <- function(area_name, mean_index,
     print(p)
     dev.off()
 
-    # Visualize city tracts diversity indices as box plot
-    my_png(eng_boxplot_dir, area_name)
+    # Visualize metro tracts diversity indices as box plot
+    my_png(eng_boxplot_dir, metro_name)
     g <- ggplot(bua_tracts_div_index,
                 aes(x = factor(0), y = Diversity_Index))
     p <- g + geom_boxplot() + xlab("") +
@@ -139,7 +140,7 @@ map_tracts_div <- function(bua, bua_div_data) {
     min_lat <- min(this_ward_map_data$lat)
     max_lat <- max(this_ward_map_data$lat)
 
-    # shapefile uses UTM projection - no distortion at city scale
+    # shapefile uses UTM projection - no distortion at metro scale
     plot_title <- sprintf("Neighborhood Diversity in %s\n", bua)
     m1 <- ggplot(this_ward_map_data) + scale_x_continuous(expand=c(0,0)) +
         scale_y_continuous(expand=c(0,0))
@@ -162,11 +163,11 @@ map_tracts_div <- function(bua, bua_div_data) {
 }
 
 #------------------------------------------------------------------------------
-# CALCULATE DIVERSITY FOR CITIES (METROPOLITAN COUNTIES
+# CALCULATE DIVERSITY FOR METROS (METROPOLITAN COUNTIES)
 #------------------------------------------------------------------------------
 
-# Helper function to calculate the citywide diversity index for one city
-calc_city_index <- function(this_bua_data) {
+# Helper function to calculate the metrowide diversity index for one metro
+calc_metro_index <- function(this_bua_data) {
 
     index <- this_bua_data %>%
         # group data by visible minority
@@ -175,11 +176,11 @@ calc_city_index <- function(this_bua_data) {
         # sum up the population within each minority
         summarize(Population = sum(Population)) %>%
         #
-        # summarize the minority populations into a city total
-        mutate(City_Population = sum(Population)) %>%
+        # summarize the minority populations into a metro total
+        mutate(Metro_Population = sum(Population)) %>%
         #
-        # calculate each minority's proportion within the city total
-        mutate(Group_Proportion = Population / City_Population) %>%
+        # calculate each minority's proportion within the metro total
+        mutate(Group_Proportion = Population / Metro_Population) %>%
         #
         # calculate each minority's proportion of "met others"
         mutate(Other_Proportion = 1 - Group_Proportion) %>%
@@ -188,16 +189,16 @@ calc_city_index <- function(this_bua_data) {
         # proportion of "met others" times the minority's proportion
         mutate(Diversity_Index = Group_Proportion * Other_Proportion) %>%
         #
-        # sum each minority's partial diversity index into a city total
+        # sum each minority's partial diversity index into a metro total
         summarize(Diversity_Index = sum(Diversity_Index))
 
     return(index)
 }
 
-# Helper function to calculate the wards diversity index for one city
+# Helper function to calculate the wards diversity index for one metro
 # This function also makes a boxplot, a histogram, and a map
-# (while the wards data is already subset to one city)
-calcWardsIndex <- function(area, this_bua_data) {
+# (while the wards data is already subset to one metro)
+calcWardsIndex <- function(metro, this_bua_data) {
 
     # Subset, reshape, group, and summarize the wards data
     wards_data <- this_bua_data %>%
@@ -214,36 +215,38 @@ calcWardsIndex <- function(area, this_bua_data) {
         summarize(Diversity_Index = sum(Diversity_Index))
     index <- mean(bua_wards_div_indices$Diversity_Index)
 
-    plot_city_descriptions(area, index, bua_wards_div_indices)
-    map_tracts_div(area, bua_wards_div_indices)
+    if (do_plots) {
+        plot_metro_descriptions(metro, index, bua_wards_div_indices)
+    }
+    map_tracts_div(metro, bua_wards_div_indices)
     return(index)
 }
 
-# Helper function to calculate the diversity statistics for one city
-my_calc_indices <- function(area) {
-    # Subset city data and exward needed variables
+# Helper function to calculate the diversity statistics for one metro
+my_calc_indices <- function(metro) {
+    # Subset metro data and exward needed variables
     cleanBuaData <- eng_anal_data %>%
-        filter(Area == area) %>%
+        filter(Metro == metro) %>%
         select(Ward, Group, Population)
 
     # Calculate indices
-    buawide_div_Index <- calc_city_index(cleanBuaData)
-    bua_wards_div_Index <- calcWardsIndex(area, cleanBuaData)
-    City_Population = sum(cleanBuaData$Population)
-    cityIndices <- data.table(Area = area,
-                              Areawide_Diversity_Index = buawide_div_Index[[1]],
+    buawide_div_Index <- calc_metro_index(cleanBuaData)
+    bua_wards_div_Index <- calcWardsIndex(metro, cleanBuaData)
+    Metro_Population = sum(cleanBuaData$Population)
+    metroIndices <- data.table(Metro = metro,
+                              Metrowide_Diversity_Index = buawide_div_Index[[1]],
                               Wards_Diversity_Index = bua_wards_div_Index,
-                              City_Population = City_Population)
-    return(cityIndices)
+                              Metro_Population = Metro_Population)
+    return(metroIndices)
 }
 
 # Calculate diversity statistics for cities
-area_names = unique(eng_anal_data$Area)
-eng_div_indices <- lapply(area_names, my_calc_indices) %>%
+metro_names = unique(eng_anal_data$Metro)
+eng_div_indices <- lapply(metro_names, my_calc_indices) %>%
     bind_rows() %>%
-    select(Area, Areawide_Diversity_Index, Wards_Diversity_Index,
-           City_Population) %>%
-    arrange(Areawide_Diversity_Index)
+    select(Metro, Metrowide_Diversity_Index, Wards_Diversity_Index,
+           Metro_Population) %>%
+    arrange(Metrowide_Diversity_Index)
 
 #------------------------------------------------------------------------------
 # VISUALIZE BRITISH cities (AS BUA'S)
@@ -262,19 +265,19 @@ if (do_plots) {
         hcl(h = (seq(h[1], h[2], length = n)), c = 100, l = 65)
     }
 
-    # Merge lookup tables and add city populations
+    # Merge lookup tables and add metro populations
     eng_anal_data <- eng_anal_data %>%
         inner_join(group_abbrevs, by = "Group") %>%
-        group_by(Area) %>%
+        group_by(Metro) %>%
         mutate(Bua_Population = sum(Population)) %>%
         mutate(Group_Proportion = Population/Bua_Population)
 
-    # Visualize group populations by city
-    my_png(eng_plots_dir, "England_City_Groups")
+    # Visualize group populations by metro
+    my_png(eng_plots_dir, "England_Metro_Groups")
     g <- ggplot(eng_anal_data, aes(Group_Letter, Group_Proportion,
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
-        facet_wrap(~ Area, ncol = 4) +
+        facet_wrap(~ Metro, ncol = 4) +
         xlab("Visible Minority") + ylab("Percentage of  Population") +
         ggtitle("Visible minority percentages in 10 most populous British cities\n") + theme_grey() +
         scale_fill_manual(values = ggplot_colours(5),
@@ -289,9 +292,9 @@ if (do_plots) {
     dev.off()
 
     # Visualize group populations in London
-    my_png(pub_dir, "London_City_Groups")
+    my_png(pub_dir, "London_Metro_Groups")
     london_anal_data <- eng_anal_data %>%
-        filter(Area == "London")
+        filter(Metro == "London")
     g <- ggplot(london_anal_data, aes(Group_Letter, Group_Proportion,
                                    fill = Group_Letter))
     p <- g + geom_bar(stat = "identity") +
@@ -312,21 +315,21 @@ if (do_plots) {
     print(p)
     dev.off()
 
-    # Visualize city diversity vs. neighborhood diversity
-    my_png(pub_dir, "England_City_Diversity")
+    # Visualize metro diversity vs. neighborhood diversity
+    my_png(pub_dir, "England_Metro_Diversity")
     g <- ggplot(eng_div_indices,
-                aes(Areawide_Diversity_Index, Wards_Diversity_Index))
+                aes(Metrowide_Diversity_Index, Wards_Diversity_Index))
     p1 <- g + geom_smooth(method = "loess", se = FALSE, size = 1, color = "red") +
         geom_abline(slope = 1, intercept = 0, linetype = "dotted")
     p2 <- p1 + geom_point(size = 3) +
-        geom_text(aes(label = Area,
+        geom_text(aes(label = Metro,
                       hjust = rep(c(1.25, -0.25),
                                   length.out = nrow(eng_div_indices)),
                       vjust = rep(0.5, length.out = nrow(eng_div_indices))),
                   size = 4)
-    p3 <- p2 + xlab("Citywide Diversity Index") +
+    p3 <- p2 + xlab("Metrowide Diversity Index") +
         ylab("Neighborhood Diversity Index") +
-        ggtitle("Citywide vs. neighborhood diversity\nin 10 most populous British cities") +
+        ggtitle("Metrowide vs. neighborhood diversity\nin 10 most populous British cities") +
         annotate(geom = "text", x = 0.48, y = 0.025,
                  label = "Based on data from UK's Office for National Statistics",
                  color = "gray60", size = 3.5) +
@@ -339,16 +342,36 @@ if (do_plots) {
     dev.off()
 }
 
+group_names <- c("South Asian", "East Asian", "Black", "Latin American", "White",
+                 "West Asian", "Other")
+groups_to_abbrevs <- c("SA", "EA", "B", "LA", "W", "WA", "O")
+group_abbrevs <- data.table(Group = group_names, Group_Letter = groups_to_abbrevs)
+g <- ggplot(eng_anal_data, aes(Group_Letter, Group_Proportion,
+                               fill = Group_Letter))
+
+#------------------------------------------------------------------------------
+# FLAG METROS WHERE BLACKS ARE A SIGNIFICANT SEGMENT OF THE POPULATION
+#------------------------------------------------------------------------------
+
+eng_black_prop = eng_anal_data %>%
+    mutate(Group = gsub(" ", "_", Group)) %>%
+    group_by(Metro, Group) %>%
+    summarize(Total_Group_Proportion = sum(Group_Proportion)) %>%
+    spread(key = Group, value = Total_Group_Proportion) %>%
+    mutate(Black_Prop = (Black / (Black + White + East_Asian + South_Asian + Other))) %>%
+    select(Metro, Black_Prop)
+eng_div_indices2 = eng_div_indices %>%
+    inner_join(eng_black_prop, by = "Metro")
+
 #------------------------------------------------------------------------------
 # SAVE DATA SUMMARIES
 #------------------------------------------------------------------------------
 
-# Save British city diversity indices as a data file and as an HTML file
+# Save British metro diversity indices as a data file and as an HTML file
 
-out_file <- paste(".", "England_City_Diversity.csv", sep = "/")
-write.csv(eng_div_indices, out_file, row.names = FALSE)
+write.csv(eng_div_indices2, "England_Metro_Diversity.csv", row.names = FALSE)
 
 library(xtable)
-table <- xtable(eng_div_indices, caption = "British City Diversity Indices")
-out_file <- paste(pub_dir, "England_City_Diversity.html", sep = "/")
+table <- xtable(eng_div_indices2, caption = "British Metro Diversity Indices")
+out_file <- paste(pub_dir, "England_Metro_Diversity.html", sep = "/")
 print.xtable(table, type = "html", file = out_file)

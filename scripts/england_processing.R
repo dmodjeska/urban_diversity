@@ -74,37 +74,38 @@ oa_ward_col_classes <- rep("character", 9)
 oa_bua_col_classes <- rep("character", 11)
 oa_ward_data <- fread(oa_ward_file, sep = ',', na = "", colClasses = oa_ward_col_classes) %>%
     select(OA11CD, WD11CD) %>%
-    rename(Output_Area = OA11CD, Ward = WD11CD)
+    rename(Output_Metro = OA11CD, Ward = WD11CD)
 oa_bua_data <- fread(oa_bua_file, sep = ',', na = "", colClasses = oa_bua_col_classes) %>%
     select(OA11CD, BUA11NM) %>%
-    rename(Output_Area = OA11CD, Area = BUA11NM) %>%
-    mutate(Area = sub(" BUA", "", Area)) %>%
-    mutate(Area = sub("Greater ", "", Area)) %>%
-    mutate(Area = sub("South", "S.", Area)) %>%
-    filter(!is.na(Area))
-bua_data <- inner_join(oa_ward_data, oa_bua_data, by = "Output_Area") %>%
-    select(-Output_Area) %>%
+    rename(Output_Metro = OA11CD, Metro = BUA11NM) %>%
+    mutate(Metro = sub(" BUA", "", Metro)) %>%
+    mutate(Metro = sub("Greater ", "", Metro)) %>%
+    mutate(Metro = sub("South", "S.", Metro)) %>%
+    mutate(Metro = sub("[/]", "-", Metro)) %>%
+    filter(!is.na(Metro))
+bua_data <- inner_join(oa_ward_data, oa_bua_data, by = "Output_Metro") %>%
+    select(-Output_Metro) %>%
     distinct()
 data_3 <- data_2 %>%
     inner_join(bua_data, by = "Ward")
 
 # Analyze names of largest built-up areas, down to a population of about 500K
 big_bua_names <- data_3 %>%
-    group_by(Area) %>%
+    group_by(Metro) %>%
     mutate(All_categories_Ethnic_group = as.numeric(All_categories_Ethnic_group)) %>%
-    summarize(Area_Population = sum(All_categories_Ethnic_group)) %>%
-    select(Area, Area_Population) %>%
+    summarize(Metro_Population = sum(All_categories_Ethnic_group)) %>%
+    select(Metro, Metro_Population) %>%
     ungroup() %>%
-    top_n(10, Area_Population)
+    top_n(10, Metro_Population)
 
 # Clean, reshape, and summarize data
 data_4 <- data_3 %>%
     select(-All_categories_Ethnic_group) %>%
-    filter(Area %in% big_bua_names$Area) %>%
-    gather(Ethnicity, Population, -Area, -Ward) %>%
+    filter(Metro %in% big_bua_names$Metro) %>%
+    gather(Ethnicity, Population, -Metro, -Ward) %>%
     mutate(Population = as.numeric(Population)) %>%
     inner_join(group_mapping, by = "Ethnicity") %>%
-    group_by(Group, Ward, Area) %>%
+    group_by(Group, Ward, Metro) %>%
     summarize(Population = sum(Population))
 
 # Check for missing data values

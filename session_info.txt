@@ -1,22 +1,18 @@
-R version 3.2.0 (2015-04-16)
+R version 3.2.3 (2015-12-10)
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
-Running under: OS X 10.11 (unknown)
+Running under: OS X 10.11.2 (El Capitan)
 
 locale:
 [1] en_CA.UTF-8/en_CA.UTF-8/en_CA.UTF-8/C/en_CA.UTF-8/en_CA.UTF-8
 
 attached base packages:
-[1] grid      stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] readxl_0.1.0     xtable_1.7-4     mapproj_1.2-4    maps_2.3-11      scales_0.3.0     rgeos_0.3-11     ggmap_2.5.2      ggplot2_1.0.1   
- [9] maptools_0.8-36  sp_1.2-0         data.table_1.9.6 readr_0.1.1      tidyr_0.3.1      stringr_1.0.0    dplyr_0.4.3     
+[1] xtable_1.8-2  scales_0.3.0  ggplot2_2.0.0 tidyr_0.4.1   readr_0.2.2   dplyr_0.4.3  
 
 loaded via a namespace (and not attached):
- [1] gtools_3.5.0        reshape2_1.4.1      splines_3.2.0       lattice_0.20-33     colorspace_1.2-6    stats4_3.2.0        mgcv_1.8-7         
- [8] chron_2.3-47        nloptr_1.0.4        foreign_0.8-66      DBI_0.3.1           RColorBrewer_1.1-2  jpeg_0.1-8          foreach_1.4.2      
-[15] plyr_1.8.3          MatrixModels_0.4-1  munsell_0.4.2       gtable_0.1.2        RgoogleMaps_1.2.0.7 codetools_0.2-14    labeling_0.3       
-[22] SparseM_1.7         caret_6.0-52        quantreg_5.19       pbkrtest_0.4-2      parallel_3.2.0      proto_0.3-10        Rcpp_0.12.1        
-[29] geosphere_1.4-3     BradleyTerry2_1.0-6 lme4_1.1-10         rjson_0.2.15        png_0.1-7           digest_0.6.8        stringi_0.5-5      
-[36] RJSONIO_1.3-0       brglm_0.5-9         tools_3.2.0         magrittr_1.5        lazyeval_0.1.10     car_2.1-0           MASS_7.3-44        
-[43] Matrix_1.2-2        assertthat_0.1      minqa_1.2.4         iterators_1.0.7     R6_2.1.1            nnet_7.3-11         nlme_3.1-122       
+ [1] Rcpp_0.12.3       digest_0.6.9      assertthat_0.1    plyr_1.8.3        grid_3.2.3       
+ [6] R6_2.1.2          gtable_0.1.2      DBI_0.3.1         magrittr_1.5      lazyeval_0.1.10  
+[11] labeling_0.3      tools_3.2.3       munsell_0.4.3     parallel_3.2.3    rsconnect_0.4.1.4
+[16] colorspace_1.2-6 

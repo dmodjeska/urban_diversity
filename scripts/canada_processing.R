@@ -32,7 +32,7 @@ minorities_to_groups <- c("South Asian", "East Asian", "Black", "East Asian",
 groups <- data.table(Description = minorities, Group = minorities_to_groups)
 
 #------------------------------------------------------------------------------
-# GET AND CLEAN CANADIAN DATA (n.b. Toronto is a CMA in this data set)
+# GET AND CLEAN CANADIAN DATA (n.b. Toronto is a Metro in this data set)
 #------------------------------------------------------------------------------
 
 # Data files are available only via manual download from the following URL:
@@ -51,10 +51,10 @@ my_load_data <- function(filename) {
     province_data <- fread(filename, colClasses = province_classes) %>%
         filter(Topic == "Visible minority population") %>%
         select(Geo_Code, CMA_CA_Name, Characteristic, Total) %>%
-        rename(Tract = Geo_Code, Area_Name = CMA_CA_Name,
+        rename(Tract = Geo_Code, Metro_Name = CMA_CA_Name,
                Description = Characteristic, Population = Total) %>%
         mutate(Population = as.numeric(Population)) %>%
-        mutate(CMA = as.numeric(substr(Tract, 1, 3))) %>%
+        mutate(Metro = as.numeric(substr(Tract, 1, 3))) %>%
         mutate(Description = factor(str_trim(Description)))
 
     return(province_data)
@@ -69,25 +69,25 @@ if (all(colSums(is.na(can_data)) != 0)) {
     warning("Warning: Canada data has missing values.")
 }
 
-# Subset largest CMA's, down to a population of about 500K
+# Subset largest Metro's, down to a population of about 500K
 top_cma_codes <- can_data %>%
-    group_by(CMA) %>%
+    group_by(Metro) %>%
     summarize(Cma_Population = sum(Population)) %>%
-    select(CMA, Cma_Population) %>%
+    select(Metro, Cma_Population) %>%
     ungroup() %>%
     top_n(10, Cma_Population)
 can_data_3 <- can_data %>%
-    filter(CMA %in% top_cma_codes$CMA)
+    filter(Metro %in% top_cma_codes$Metro)
 
 # Correct for encoding limitations in fread and read_csv
 # Also trim hyphenated names for display purposes
-montreal_data <- filter(can_data_3, CMA == 462) %>%
-    mutate(Area_Name = "Montreal")
-quebec_data <- filter(can_data_3, CMA == 421) %>%
-    mutate(Area_Name = "Quebec")
-other_data <- filter(can_data_3, (CMA != 462) & (CMA != 421)) %>%
-    mutate(Area_Name = sub(" [[:punct:]] [[:alpha:]]* *[[:punct:]]* *[[:alpha:]]*$", "",
-                          Area_Name))
+montreal_data <- filter(can_data_3, Metro == 462) %>%
+    mutate(Metro_Name = "Montreal")
+quebec_data <- filter(can_data_3, Metro == 421) %>%
+    mutate(Metro_Name = "Quebec")
+other_data <- filter(can_data_3, (Metro != 462) & (Metro != 421)) %>%
+    mutate(Metro_Name = sub(" [[:punct:]] [[:alpha:]]* *[[:punct:]]* *[[:alpha:]]*$", "",
+                          Metro_Name))
 can_data_4 <- bind_rows(montreal_data, quebec_data, other_data) %>%
     inner_join(groups, by = "Description") %>%
     select(-Description)
