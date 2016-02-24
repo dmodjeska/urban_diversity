@@ -15,7 +15,7 @@ library(data.table)
 library(xlsx)
 
 #------------------------------------------------------------------------------
-# GET AND CLEAN USA DATA
+# GET AND CLEAN USA DATA 
 #------------------------------------------------------------------------------
 
 # Download census data files if not already present
